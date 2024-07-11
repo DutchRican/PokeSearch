@@ -50,23 +50,25 @@ onMounted(focusInput)
         <a href="#" @click="showPokemon(pokemon.url)">{{ pokemon.name }}</a>
       </li>
     </ul>
-    <DetailModal v-if="selectedPokemon" :pokemon="selectedPokemon" @closeModal="selectedPokemon = null; focusInput()">
-      <template #header>
-        <h1 class="pokemon-details-header">{{ selectedPokemon.name }} details</h1>
-      </template>
-      <div class="pokemon-details" v-if="selectedPokemon">
-        <img :src="selectedPokemon.sprites.front_default" alt="selectedPokemon.mame">
-        <div class="detail-stats">
-          <span>Height:</span><span> {{ selectedPokemon.height }}</span>
+    <Transition>
+      <DetailModal v-if="selectedPokemon" :pokemon="selectedPokemon" @closeModal="selectedPokemon = null; focusInput()">
+        <template #header>
+          <h1 class="pokemon-details-header">{{ selectedPokemon.name }} details</h1>
+        </template>
+        <div class="pokemon-details" v-if="selectedPokemon">
+          <img :src="selectedPokemon.sprites.front_default" alt="selectedPokemon.mame">
+          <div class="detail-stats">
+            <span>Height:</span><span> {{ selectedPokemon.height }}</span>
+          </div>
+          <div class="detail-stats">
+            <span>Weight: </span><span> {{ selectedPokemon.weight }}</span>
+          </div>
+          <div class="detail-stats" v-for="(stat, index) in selectedPokemon.stats" :key="index">
+            <span>{{ stat.stat.name }}:</span> <span>{{ stat.base_stat }}</span>
+          </div>
         </div>
-        <div class="detail-stats">
-          <span>Weight: </span><span> {{ selectedPokemon.weight }}</span>
-        </div>
-        <div class="detail-stats" v-for="(stat, index) in selectedPokemon.stats" :key="index">
-          <span>{{ stat.stat.name }}:</span> <span>{{ stat.base_stat }}</span>
-        </div>
-      </div>
-    </DetailModal>
+      </DetailModal>
+    </Transition>
   </main>
 </template>
 
@@ -154,5 +156,15 @@ ul {
   width: 80%;
   display: flex;
   justify-content: space-between;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

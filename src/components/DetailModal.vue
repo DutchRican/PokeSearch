@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
+
 
 defineProps(['pokemon']);
 defineEmits(['closeModal']);
+
+onMounted(() => {
+  document.body.classList.add("modal-open");
+});
+
+onUnmounted(() => {
+  document.body.classList.remove("modal-open");
+});
 
 </script>
 
