@@ -15,6 +15,7 @@ const pokemonList = ref(pokemonData);
 const searchTerm = ref('');
 const search = ref<HTMLElement | null>(null);
 const selectedPokemon = ref<PokemonDetail | null>(null);
+const timeout = ref<number | null>(null);
 
 const filteredPokemonList = computed(() => {
   return pokemonList.value.filter(pokemon => pokemon.name.includes(searchTerm.value));
@@ -34,6 +35,16 @@ const focusInput = () => {
     search.value.focus();
   }
 }
+
+const debounceInput = (val: string) => {
+  if (timeout.value) {
+    clearTimeout(timeout.value);
+  }
+  timeout.value = setTimeout(() => {
+    searchTerm.value = val?.trim();
+  }, 300);
+}
+
 onMounted(focusInput)
 </script>
 
@@ -43,13 +54,17 @@ onMounted(focusInput)
   </header>
   <main>
     <div class="search-container">
-      <input class="search-box" type="text" placeholder="Search..." v-model="searchTerm" ref="search">
+      <input class="search-box" type="text" placeholder="Search..." v-bind:value="searchTerm" ref="search"
+        v-on:input="debounceInput(($event.target as HTMLInputElement).value)" />
     </div>
-    <ul>
-      <li v-for="pokemon in filteredPokemonList" :key="pokemon.url" class="pokemon-item">
-        <a href="#" @click="showPokemon(pokemon.url)">{{ pokemon.name }}</a>
-      </li>
-    </ul>
+    <div class="results-body">
+      <ul v-if="filteredPokemonList.length">
+        <li v-for="pokemon in filteredPokemonList" :key="pokemon.url" class="pokemon-item">
+          <a href="#" @click="showPokemon(pokemon.url)">{{ pokemon.name }}</a>
+        </li>
+      </ul>
+      <span v-else class="empty-search">No pokemon found</span>
+    </div>
     <Transition>
       <DetailModal v-if="selectedPokemon" :pokemon="selectedPokemon" @closeModal="selectedPokemon = null; focusInput()">
         <template #header>
@@ -75,6 +90,7 @@ onMounted(focusInput)
 <style scoped>
 header {
   display: flex;
+
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -122,6 +138,7 @@ header {
 }
 
 ul {
+  width: 90%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 5px;
@@ -142,9 +159,9 @@ ul {
 }
 
 .pokemon-details-header {
-  color: #000;
-  display: flex;
-  align-items: center;
+  background: linear-gradient(to right, #FDDF3C, #3B4CCA);
+  background-clip: text;
+  color: transparent;
 }
 
 .pokemon-details img {
@@ -166,5 +183,23 @@ ul {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+
+.results-body {
+  height: 60vh;
+  overflow-y: scroll;
+  display: flex;
+  justify-content: center;
+}
+
+.results-body::-webkit-scrollbar {
+  display: none;
+}
+
+.empty-search {
+  color: var(--vt-c-text-light-1);
+  padding-top: 1em;
+  font-weight: 500;
+  font-size: large;
 }
 </style>
