@@ -1,40 +1,32 @@
 <script setup lang="ts">
-import pokemonData from './assets/pokemonapi.json';
+import { useQuery, useQueryProvider } from 'vue-query';
 import DetailModal from './components/DetailModal.vue';
 
-type PokemonDetail = {
-  name: string;
-  sprites: { [key: string]: string };
-  height: number;
-  weight: number;
-  stats: { base_stat: number, effort: number, stat: { name: string, url: string } }[];
-}
+useQueryProvider();
 
 import { computed, onMounted, ref } from 'vue';
-const pokemonList = ref(pokemonData);
+import { fetchPokemonDetails, fetchPokemons, type PokemonDetail } from './lib/api';
 const searchTerm = ref('');
 const search = ref<HTMLElement | null>(null);
 const selectedPokemon = ref<PokemonDetail | null>(null);
 const timeout = ref<number | null>(null);
 
 const filteredPokemonList = computed(() => {
-  return pokemonList.value.filter(pokemon => pokemon.name.includes(searchTerm.value));
+  return data.value?.filter((pokemon: { name: string, url: string }) => pokemon.name.includes(searchTerm.value));
 });
-const showPokemon = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    console.error(`Error fetching pokemon: ${response.statusText}`)
-  }
-
-  selectedPokemon.value = await response.json();
-  searchTerm.value = "";
-}
 
 const focusInput = () => {
   if (search.value) {
     search.value.focus();
   }
 }
+
+const getDetails = async (url: string) => {
+  console.log('called', url)
+  selectedPokemon.value = await fetchPokemonDetails(url)
+}
+
+const { data } = useQuery("pokemon", fetchPokemons);
 
 const debounceInput = (val: string) => {
   if (timeout.value) {
@@ -58,9 +50,10 @@ onMounted(focusInput)
         v-on:input="debounceInput(($event.target as HTMLInputElement).value)" />
     </div>
     <div class="results-body">
-      <ul v-if="filteredPokemonList.length">
+      <ul v-if="filteredPokemonList && filteredPokemonList.length">
         <li v-for="pokemon in filteredPokemonList" :key="pokemon.url" class="pokemon-item">
-          <a href="#" @click="showPokemon(pokemon.url)">{{ pokemon.name }}</a>
+          <a href="#" @click="getDetails(pokemon.url)">{{ pokemon.name
+            }}</a>
         </li>
       </ul>
       <span v-else class="empty-search">No pokemon found</span>
