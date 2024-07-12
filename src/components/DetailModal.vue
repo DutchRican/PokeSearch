@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 
-
-defineProps(['pokemon']);
+defineProps<{ name: String }>();
 defineEmits(['closeModal']);
 
 onMounted(() => {
@@ -41,12 +40,11 @@ onUnmounted(() => {
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: #cececeb1;
-
+  backdrop-filter: blur(6px);
 }
 
 .modal {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(182, 146, 218, 0.9);
   backdrop-filter: blur(10);
   border: 2px solid #a2c3e3;
   border-radius: 10px;

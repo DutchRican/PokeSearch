@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import DetailModal from '@/components/DetailModal.vue';
+import PokeItem from '@/components/PokeItem.vue';
 import { useQuery, useQueryProvider } from 'vue-query';
-import DetailModal from './components/DetailModal.vue';
 
 useQueryProvider();
 
@@ -22,7 +23,6 @@ const focusInput = () => {
 }
 
 const getDetails = async (url: string) => {
-  console.log('called', url)
   selectedPokemon.value = await fetchPokemonDetails(url)
 }
 
@@ -51,15 +51,15 @@ onMounted(focusInput)
     </div>
     <div class="results-body">
       <ul v-if="filteredPokemonList && filteredPokemonList.length">
-        <li v-for="pokemon in filteredPokemonList" :key="pokemon.url" class="pokemon-item">
-          <a href="#" @click="getDetails(pokemon.url)">{{ pokemon.name
-            }}</a>
-        </li>
+        <PokeItem v-for="pokemon in filteredPokemonList" :key="pokemon.url" :pokemon="pokemon"
+          @click="getDetails(pokemon.url)" />
+
       </ul>
-      <span v-else class="empty-search">No pokemon found</span>
+      <span v-else class=" empty-search">No pokemon found</span>
     </div>
     <Transition>
-      <DetailModal v-if="selectedPokemon" :pokemon="selectedPokemon" @closeModal="selectedPokemon = null; focusInput()">
+      <DetailModal v-if="selectedPokemon" :name="selectedPokemon.name"
+        @closeModal="selectedPokemon = null; focusInput()">
         <template #header>
           <h1 class="pokemon-details-header">{{ selectedPokemon.name }} details</h1>
         </template>
@@ -134,7 +134,7 @@ ul {
   width: 90%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 5px;
+  gap: 8px;
   list-style: none;
 }
 
