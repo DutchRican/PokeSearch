@@ -51,14 +51,14 @@ onMounted(focusInput)
     </div>
     <div class="results-body">
       <ul v-if="filteredPokemonList && filteredPokemonList.length">
-        <PokeItem v-for="pokemon in filteredPokemonList" :key="pokemon.url" :pokemon="pokemon"
+        <poke-item v-for="pokemon in filteredPokemonList" :key="pokemon.url" :pokemon="pokemon"
           @click="getDetails(pokemon.url)" />
 
       </ul>
       <span v-else class=" empty-search">No pokemon found</span>
     </div>
     <Transition>
-      <DetailModal v-if="selectedPokemon" :name="selectedPokemon.name"
+      <detail-modal v-if="selectedPokemon" :name="selectedPokemon.name"
         @closeModal="selectedPokemon = null; focusInput()">
         <template #header>
           <h1 class="pokemon-details-header">{{ selectedPokemon.name }} details</h1>
@@ -75,7 +75,7 @@ onMounted(focusInput)
             <span>{{ stat.stat.name }}:</span> <span>{{ stat.base_stat }}</span>
           </div>
         </div>
-      </DetailModal>
+      </detail-modal>
     </Transition>
   </main>
 </template>
