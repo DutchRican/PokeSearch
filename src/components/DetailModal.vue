@@ -40,11 +40,12 @@ onUnmounted(() => {
   right: 0;
   width: 100%;
   height: 100%;
+  background-color: rgba(29, 29, 91, 0.7);
   backdrop-filter: blur(6px);
 }
 
 .modal {
-  background-color: rgba(182, 146, 218, 0.9);
+  background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10);
   border: 2px solid #a2c3e3;
   border-radius: 10px;
@@ -74,6 +75,7 @@ onUnmounted(() => {
   font-size: 16px;
   background-color: transparent;
   border: 2px solid #3B4CCA;
+  border-radius: 10px;
 }
 
 .close-btn:hover {
