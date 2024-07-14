@@ -76,6 +76,7 @@ onUnmounted(() => {
   background-color: transparent;
   border: 2px solid #3B4CCA;
   border-radius: 10px;
+  color: #dec435;
 }
 
 .close-btn:hover {

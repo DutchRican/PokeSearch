@@ -150,6 +150,7 @@ ul {
   display: flex;
   justify-content: space-between;
   font-size: larger;
+  color: #dec435;
 }
 
 .v-enter-active,
