@@ -47,7 +47,7 @@ onMounted(focusInput)
   <main>
     <div class="search-container">
       <input class="search-box" type="text" placeholder="Search..." v-bind:value="searchTerm" ref="search"
-        v-on:input="debounceInput(($event.target as HTMLInputElement).value)" />
+        v-on:input="debounceInput(($event.target as HTMLInputElement).value)" @keydown.escape="searchTerm = ''" />
     </div>
     <div class="results-body">
       <ul v-if="filteredPokemonList && filteredPokemonList.length">
@@ -113,27 +113,10 @@ header {
   text-align: center;
 }
 
-.pokemon-item {
-  float: left;
-  margin: 10px;
-}
-
-.pokemon-item a {
-  color: #000;
-  text-decoration: none;
-  font-size: 16px;
-  transition: color 0.3s ease;
-  text-transform: capitalize;
-}
-
-.pokemon-item a:hover {
-  color: #3B4CCA;
-}
-
 ul {
   width: 90%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 8px;
   list-style: none;
 }
@@ -166,6 +149,7 @@ ul {
   width: 80%;
   display: flex;
   justify-content: space-between;
+  font-size: larger;
 }
 
 .v-enter-active,
@@ -179,7 +163,8 @@ ul {
 }
 
 .results-body {
-  height: 60vh;
+  height: fit-content;
+  max-height: 60vh;
   overflow-y: scroll;
   display: flex;
   justify-content: center;

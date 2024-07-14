@@ -6,7 +6,7 @@ const { pokemon } = defineProps<Pokemon>();
 
 <template>
 	<div class="pokeListItem">
-		<span class="pokeListItem_name">{{ pokemon.name }}</span>
+		<span class="pokeListItem_name" :title="pokemon.name">{{ pokemon.name }}</span>
 	</div>
 </template>
 
@@ -17,8 +17,7 @@ const { pokemon } = defineProps<Pokemon>();
 	border: 1px solid #ccc;
 	border-radius: 20px;
 	cursor: pointer;
-	max-height: 6em;
-	text-overflow: ellipsis;
+	height: 5em;
 	align-items: center;
 	justify-content: center;
 }
@@ -32,5 +31,8 @@ const { pokemon } = defineProps<Pokemon>();
 	color: black;
 	font-size: medium;
 	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 </style>

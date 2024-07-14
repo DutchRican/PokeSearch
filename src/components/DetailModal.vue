@@ -45,8 +45,8 @@ onUnmounted(() => {
 }
 
 .modal {
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10);
+  background-color: #423f8f8c;
+  backdrop-filter: blur(10px);
   border: 2px solid #a2c3e3;
   border-radius: 10px;
   text-align: center;
