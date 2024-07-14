@@ -91,7 +91,10 @@ header {
 
 .logo {
   margin: 0 2rem 0 0;
-
+  min-width: 390px;
+  max-width: 40%;
+  height: auto;
+  object-fit: cover;
 }
 
 .search-container {
@@ -169,6 +172,7 @@ ul {
   overflow-y: scroll;
   display: flex;
   justify-content: center;
+  padding-bottom: 1em;
 }
 
 .results-body::-webkit-scrollbar {
