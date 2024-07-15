@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import DetailModal from '@/components/DetailModal.vue';
-import PokeItem from '@/components/PokeItem.vue';
 import { useQuery, useQueryProvider } from 'vue-query';
 
 useQueryProvider();
 
+import HeaderMain from '@/components/HeaderMain.vue';
+import PokeList from '@/components/PokeList.vue';
+import SearchInput from '@/components/SearchInput.vue';
+
 import { computed, onMounted, ref } from 'vue';
 import { fetchPokemonDetails, fetchPokemons, type PokemonDetail } from './lib/api';
+
 const searchTerm = ref('');
 const search = ref<HTMLElement | null>(null);
 const selectedPokemon = ref<PokemonDetail | null>(null);
-const timeout = ref<number | null>(null);
 
 const filteredPokemonList = computed(() => {
   return data.value?.filter((pokemon: { name: string, url: string }) => pokemon.name.includes(searchTerm.value));
@@ -28,33 +31,16 @@ const getDetails = async (url: string) => {
 
 const { data } = useQuery("pokemon", fetchPokemons);
 
-const debounceInput = (val: string) => {
-  if (timeout.value) {
-    clearTimeout(timeout.value);
-  }
-  timeout.value = setTimeout(() => {
-    searchTerm.value = val?.trim();
-  }, 300);
-}
-
 onMounted(focusInput)
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/pokemon.webp" />
-  </header>
+  <header-main />
   <main>
-    <div class="search-container">
-      <input class="search-box" type="text" placeholder="Search..." v-bind:value="searchTerm" ref="search"
-        v-on:input="debounceInput(($event.target as HTMLInputElement).value)" @keydown.escape="searchTerm = ''" />
-    </div>
+    <search-input :searchTerm @updateSearch="(val: string) => searchTerm = val" />
     <div class="results-body">
-      <ul v-if="filteredPokemonList && filteredPokemonList.length">
-        <poke-item v-for="pokemon in filteredPokemonList" :key="pokemon.url" :pokemon="pokemon"
-          @click="getDetails(pokemon.url)" />
-
-      </ul>
+      <poke-list v-if="filteredPokemonList && filteredPokemonList.length" :filteredPokemonList="filteredPokemonList"
+        @getDetails="getDetails" />
       <span v-else class=" empty-search">No pokemon found</span>
     </div>
     <Transition>
@@ -95,25 +81,6 @@ header {
   max-width: 40%;
   height: auto;
   object-fit: cover;
-}
-
-.search-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.search-box {
-  width: 30%;
-  height: 50px;
-  font-size: 1.5em;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: 40px 0;
-  text-align: center;
 }
 
 ul {
