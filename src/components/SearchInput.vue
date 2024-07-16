@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-const { searchTerm } = defineProps<{ searchTerm: string }>();
+defineProps({ searchTerm: { type: String, required: true } });
 const emit = defineEmits<{
 	(e: 'updateSearch', value: string): void
 }>();
@@ -18,8 +18,8 @@ const debounceInput = (val: string) => {
 
 <template>
 	<div class="search-container">
-		<input class="search-box" type="text" placeholder="Search..." :value="searchTerm" ref="search"
-			v-on:input="debounceInput(($event.target as HTMLInputElement).value)"
+		<input class="search-box" type="text" placeholder="Search..." :value="searchTerm"
+			@input="debounceInput(($event.target as HTMLInputElement).value)"
 			@keydown.escape="emit('updateSearch', '')" />
 	</div>
 </template>
